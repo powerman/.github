@@ -1,0 +1,15 @@
+# Settings applied to private repos because of GitHub Free account restrictions.
+
+# List of repos that belong to the suborg.
+# You can use Glob patterns.
+# WARN: Looks like 2.1.17 actually uses regexp. Next version should use globs instead!
+suborgrepos:
+  - ^infra$
+
+# Every other property is the same as the org level settings and can be overridden here.
+
+# https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#update-a-repository
+repository:
+  security_and_analysis:
+    advanced_security:
+      status: disabled
