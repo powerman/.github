@@ -158,6 +158,9 @@ rulesets:
           required_status_checks:
             - context: "{{EXTERNALLY_DEFINED}}"
 
+      # Prevent users with push access from force pushing to refs.
+      - type: non_fast_forward
+
     # Choose which workflows must pass before branches can be merged.
     # - type: workflows
     #   parameters:
