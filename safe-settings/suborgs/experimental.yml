@@ -38,7 +38,7 @@ repository:
   # Either `true` to allow auto-merge on pull requests,
   # or `false` to disallow auto-merge.
   # Default: `false`
-  allow_auto_merge: null
+  # allow_auto_merge: null
 
   # Either `true` to allow automatically deleting head branches
   # when pull requests are merged, or `false` to prevent automatic deletion.
@@ -48,7 +48,7 @@ repository:
   # Either `true` to  allow update branch on pull requests,
   # or `false` to disallow update branch.
   # Default: `false`
-  allow_update_branch: null
+  # allow_update_branch: null
 
 # Rulesets.
 # See https://docs.github.com/en/rest/orgs/rules?apiVersion=2022-11-28#create-an-organization-repository-ruleset
