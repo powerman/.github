@@ -1,0 +1,23 @@
+# Restricting safe-settings to specific repos.
+#
+# If no file is specified, the following repositories are excluded by default
+# restrictedRepos: ['admin', '.github', 'safe-settings']
+
+# Pattern matching uses glob expressions, e.g use * for wildcards.
+# WARN: Looks like 2.1.17 actually uses regexp. Next version should use globs instead!
+restrictedRepos:
+  exclude:
+    # Not sure why it's recommended to exclude repo with safe-settings itself -
+    # at a glance there are no dangerous settings which may give any troubles, but let it be.
+    - ^.github$
+    # These repos are all archived and will cause the GHA to fail.
+    # https://github.com/github/safe-settings/issues/443
+    - ^asciidoc$
+    - ^go-service-narada-example$
+    - ^gotestcover$
+  include:
+    # For now let's include every repo one-by-one,
+    # to avoid possible unwanted surprises after applying org-wide settings to ALL my repos.
+    - ^infra$
+    - ^workflows$
+    - ^md-tasks-notify$

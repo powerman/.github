@@ -1,0 +1,18 @@
+# This settings file can be used to create repo-level settings.
+
+repository:
+  name: .github
+  # description: Example
+  # homepage: https://example.com/
+  # Create an initial commit with empty README.
+  # Keep this set to true in most cases since many of the policies below cannot be implemented
+  # on bare repos.
+  auto_init: true
+
+  private: false
+
+  # topics: [github, probot, new-topic, another-topic]
+
+  # default_branch: main
+  # gitignore_template: node
+  license_template: mit

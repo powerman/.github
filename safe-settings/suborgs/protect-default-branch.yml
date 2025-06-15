@@ -1,0 +1,174 @@
+# Settings applied to latest public repos I'm working on.
+# Private repos does not support branch protection and rulesets for non-Pro GitHub account.
+
+# List of repos that belong to the suborg.
+# You can use Glob patterns.
+# WARN: Looks like 2.1.17 actually uses regexp. Next version should use globs instead!
+suborgrepos:
+  - ^workflows$
+  - ^md-tasks-notify$
+
+# Every other property is the same as the org level settings and can be overridden here.
+
+# https://docs.github.com/en/rest/orgs/rules?apiVersion=2022-11-28#create-an-organization-repository-ruleset
+rulesets:
+  - name: Default branch
+    # The target of the ruleset. Can be one of:
+    # - branch
+    # - tag
+    target: branch
+    # The enforcement level of the ruleset. `evaluate` allows admins to test
+    # rules before enforcing them.
+    # - disabled
+    # - active
+    # - evaluate
+    enforcement: active
+
+    # The actors that can bypass the rules in this ruleset
+    bypass_actors:
+      - actor_id: 5 # repo admin
+        # type: The type of actor that can bypass a ruleset
+        # - RepositoryRole
+        # - Team
+        # - Integration
+        # - OrganizationAdmin
+        actor_type: RepositoryRole
+        #  When the specified actor can bypass the ruleset. `pull_request`
+        #  means that an actor can only bypass rules on pull requests.
+        #  - always
+        #  - pull_request
+        bypass_mode: always
+
+    conditions:
+      # Parameters for a repository ruleset ref name condition
+      ref_name:
+        # Array of ref names or patterns to include. One of these
+        # patterns must match for the condition to pass. Also accepts
+        # `~DEFAULT_BRANCH` to include the default branch or `~ALL` to
+        # include all branches.
+        include: ["~DEFAULT_BRANCH"]
+
+        # Array of ref names or patterns to exclude, e.g. ["refs/heads/oldmaster"].
+        # The condition will not pass if any of these patterns match.
+        exclude: []
+
+    rules:
+      # - type: creation
+
+      # - type: update
+      #   parameters:
+      #     # Branch can pull changes from its upstream repository
+      #     update_allows_fetch_and_merge: true
+
+      - type: deletion
+
+      # - type: required_linear_history
+
+      # - type: required_signatures
+
+      # - type: required_deployments
+      #   parameters:
+      #     required_deployment_environments: ["staging"]
+
+      - type: pull_request
+        parameters:
+          # Array of allowed merge methods.
+          # Allowed values include merge, squash, and rebase.
+          # At least one option must be enabled.
+          allowed_merge_methods: ['squash']
+          # Reviewable commits pushed will dismiss previous pull
+          # request review approvals.
+          dismiss_stale_reviews_on_push: false
+          # Require an approving review in pull requests that modify
+          # files that have a designated code owner
+          require_code_owner_review: false
+          # Whether the most recent reviewable push must be approved
+          # by someone other than the person who pushed it.
+          require_last_push_approval: false
+          # The number of approving reviews that are required before a
+          # pull request can be merged.
+          required_approving_review_count: 0
+          # All conversations on code must be resolved before a pull
+          # request can be merged.
+          required_review_thread_resolution: false
+
+      # Choose which status checks must pass before branches can be merged
+      # into a branch that matches this rule. When enabled, commits must
+      # first be pushed to another branch, then merged or pushed directly
+      # to a branch that matches this rule after status checks have
+      # passed.
+      - type: required_status_checks
+        parameters:
+          # Whether pull requests targeting a matching branch must be
+          # tested with the latest code. This setting will not take
+          # effect unless at least one status check is enabled.
+          strict_required_status_checks_policy: false
+          required_status_checks:
+            - context: "dependency-review"
+              integration_id: 15368
+            - context: "lint-pr-title"
+              integration_id: 15368
+            - context: "test"
+              integration_id: 15368
+
+      # Prevent users with push access from force pushing to refs.
+      - type: non_fast_forward
+
+    # Choose which workflows must pass before branches can be merged.
+    # - type: workflows
+    #   parameters:
+    #     workflows:
+    #       - path: .github/workflows/example.yml
+    #         # Run $("meta[name=octolytics-dimension-repository_id]").getAttribute('content')
+    #         # in the browser console of the repository to get the repository_id
+    #         repository_id: 123456
+    #         # One of the following:
+    #         # Branch or tag
+    #         ref: refs/heads/main
+    #         # Commit SHA
+    #         sha: 1234567890abcdef
+    #
+    # - type: commit_message_pattern
+    #   parameters:
+    #     name: test commit_message_pattern
+    #     # required:
+    #     #  - operator
+    #     #  - pattern
+    #     negate: true
+    #     operator: starts_with
+    #     # The operator to use for matching.
+    #     # - starts_with
+    #     # - ends_with
+    #     # - contains
+    #     # - regex
+    #     pattern: skip*
+    #     # The pattern to match with.
+    #
+    # - type: commit_author_email_pattern
+    #   parameters:
+    #     name: test commit_author_email_pattern
+    #     negate: false
+    #     operator: regex
+    #     pattern: "^.*@example.com$"
+    #
+    # - type: committer_email_pattern
+    #   parameters:
+    #     name: test committer_email_pattern
+    #     negate: false
+    #     operator: regex
+    #     pattern: "^.*@example.com$"
+    #
+    # - type: branch_name_pattern
+    #   parameters:
+    #     name: test branch_name_pattern
+    #     negate: false
+    #     operator: regex
+    #     pattern: ".*\/.*"
+    #
+    # - type: "tag_name_pattern"
+    #   parameters:
+    #     name: test tag_name_pattern
+    #     negate: false
+    #     operator: regex
+    #     pattern: ".*\/.*"
+
