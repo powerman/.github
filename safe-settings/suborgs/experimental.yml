@@ -68,7 +68,7 @@ rulesets:
 
     # The actors that can bypass the rules in this ruleset
     bypass_actors:
-      - #actor_id: null
+      - actor_id: 1
         # type: The type of actor that can bypass a ruleset
         # - RepositoryRole
         # - Team
