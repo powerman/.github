@@ -1,0 +1,11 @@
+# Restricting safe-settings to specific repos.
+#
+# If no file is specified, the following repositories are excluded by default
+# restrictedRepos: ['admin', '.github', 'safe-settings']
+
+# Pattern matching uses glob expressions, e.g use * for wildcards.
+restrictedRepos:
+  exclude:
+    - .github
+  include:
+    - md-tasks-notify
