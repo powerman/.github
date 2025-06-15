@@ -68,7 +68,7 @@ rulesets:
 
     # The actors that can bypass the rules in this ruleset
     bypass_actors:
-      - actor_id: 1
+      - actor_id: 5 # repo admin
         # type: The type of actor that can bypass a ruleset
         # - RepositoryRole
         # - Team
