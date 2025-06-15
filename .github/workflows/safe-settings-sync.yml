@@ -1,8 +1,16 @@
 name: Safe Settings Sync
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: "0 */4 * * *"
-  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'safe-settings/**/*.yml'
+
+concurrency:
+  cancel-in-progress: false
+  group: safe-settings
 
 jobs:
   safeSettingsSync:
@@ -37,3 +45,4 @@ jobs:
           ADMIN_REPO: .github
           CONFIG_PATH: safe-settings
           DEPLOYMENT_CONFIG_FILE: ${{ github.workspace }}/safe-settings/deployment-settings.yml
+          LOG_LEVEL: trace
