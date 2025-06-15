@@ -104,9 +104,9 @@ rulesets:
           # effect unless at least one status check is enabled.
           strict_required_status_checks_policy: false
           required_status_checks:
-            - context: "dependency-review"
+            - context: "main / dependency-review"
               integration_id: 15368
-            - context: "lint-pr-title"
+            - context: "main / lint-pr-title"
               integration_id: 15368
             - context: "test"
               integration_id: 15368
