@@ -105,6 +105,7 @@ rulesets:
         # Array of ref names or patterns to exclude. The condition
         # will not pass if any of these patterns match.
         # exclude: ["refs/heads/oldmaster"]
+        exclude: []
 
     # Refer to https://docs.github.com/en/rest/orgs/rules#create-an-organization-repository-ruleset
     rules:
