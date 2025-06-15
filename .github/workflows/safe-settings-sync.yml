@@ -45,4 +45,4 @@ jobs:
           ADMIN_REPO: .github
           CONFIG_PATH: safe-settings
           DEPLOYMENT_CONFIG_FILE: ${{ github.workspace }}/safe-settings/deployment-settings.yml
-          LOG_LEVEL: trace
+          LOG_LEVEL: debug
