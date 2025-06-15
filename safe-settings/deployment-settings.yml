@@ -4,8 +4,10 @@
 # restrictedRepos: ['admin', '.github', 'safe-settings']
 
 # Pattern matching uses glob expressions, e.g use * for wildcards.
+# WARN: Looks like 2.1.17 actually uses regexp. Next version should use globs instead!
 restrictedRepos:
   exclude:
-    - .github
+    - ^.github$
   include:
-    - md-tasks-notify
+    - ^workflows$
+    - ^md-tasks-notify$
