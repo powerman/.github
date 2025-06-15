@@ -7,6 +7,10 @@ on:
     branches: [main]
     paths:
       - 'safe-settings/**/*.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'safe-settings/**/*.yml'
 
 concurrency:
   cancel-in-progress: false
@@ -46,3 +50,4 @@ jobs:
           CONFIG_PATH: safe-settings
           DEPLOYMENT_CONFIG_FILE: ${{ github.workspace }}/safe-settings/deployment-settings.yml
           LOG_LEVEL: debug
+          ENABLE_PR_COMMENT: 'true'
