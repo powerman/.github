@@ -9,5 +9,6 @@ restrictedRepos:
   exclude:
     - ^.github$
   include:
-    - ^workflows$
+    - ^infra$
+    # - ^workflows$
     - ^md-tasks-notify$

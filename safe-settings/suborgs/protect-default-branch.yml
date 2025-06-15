@@ -1,4 +1,5 @@
-# This settings file can be used to create suborg-level settings.
+# Settings applied to latest public repos I'm working on.
+# Private repos does not support branch protection and rulesets for non-Pro GitHub account.
 
 # List of repos that belong to the suborg.
 # You can use Glob patterns.
@@ -8,54 +9,10 @@ suborgrepos:
   - ^md-tasks-notify$
 
 # Every other property is the same as the org level settings and can be overridden here.
-repository:
 
-  # Settings for Code security and analysis
-  # Dependabot Alerts
-  security:
-    enableVulnerabilityAlerts: true
-    enableAutomatedSecurityFixes: true
-
-  # Either `true` to enable projects for this repository, or `false` to disable them.
-  has_projects: false
-
-  # Either `true` to enable the wiki for this repository, `false` to disable it.
-  has_wiki: false
-
-  # Either `true` to allow squash-merging pull requests, or `false` to prevent
-  # squash-merging.
-  allow_squash_merge: true
-  squash_merge_commit_title: PR_TITLE
-  squash_merge_commit_message: PR_BODY
-
-  # Either `true` to allow merging pull requests with a merge commit, or `false`
-  # to prevent merging pull requests with merge commits.
-  allow_merge_commit: false
-
-  # Either `true` to allow rebase-merging pull requests, or `false` to prevent
-  # rebase-merging.
-  allow_rebase_merge: false
-
-  # Either `true` to allow auto-merge on pull requests,
-  # or `false` to disallow auto-merge.
-  # Default: `false`
-  # allow_auto_merge: null
-
-  # Either `true` to allow automatically deleting head branches
-  # when pull requests are merged, or `false` to prevent automatic deletion.
-  # Default: `false`
-  delete_branch_on_merge: true
-
-  # Either `true` to  allow update branch on pull requests,
-  # or `false` to disallow update branch.
-  # Default: `false`
-  # allow_update_branch: null
-
-# Rulesets.
-# See https://docs.github.com/en/rest/orgs/rules?apiVersion=2022-11-28#create-an-organization-repository-ruleset
-# for available options.
+# https://docs.github.com/en/rest/orgs/rules?apiVersion=2022-11-28#create-an-organization-repository-ruleset
 rulesets:
-  - name: default branch
+  - name: Default branch
     # The target of the ruleset. Can be one of:
     # - branch
     # - tag
@@ -82,18 +39,6 @@ rulesets:
         #  - pull_request
         bypass_mode: always
 
-    # - actor_id: 1
-    #   actor_type: OrganizationAdmin
-    #   bypass_mode: always
-    #
-    # - actor_id: 7898
-    #   actor_type: RepositoryRole
-    #   bypass_mode: always
-    #
-    # - actor_id: 210920
-    #   actor_type: Integration
-    #   bypass_mode: always
-
     conditions:
       # Parameters for a repository ruleset ref name condition
       ref_name:
@@ -103,22 +48,24 @@ rulesets:
         # include all branches.
         include: ["~DEFAULT_BRANCH"]
 
-        # Array of ref names or patterns to exclude. The condition
-        # will not pass if any of these patterns match.
-        # exclude: ["refs/heads/oldmaster"]
+        # Array of ref names or patterns to exclude, e.g. ["refs/heads/oldmaster"].
+        # The condition will not pass if any of these patterns match.
         exclude: []
 
-    # Refer to https://docs.github.com/en/rest/orgs/rules#create-an-organization-repository-ruleset
     rules:
       # - type: creation
+
       # - type: update
       #   parameters:
       #     # Branch can pull changes from its upstream repository
       #     update_allows_fetch_and_merge: true
+
       - type: deletion
+
       # - type: required_linear_history
+
       # - type: required_signatures
-      #
+
       # - type: required_deployments
       #   parameters:
       #     required_deployment_environments: ["staging"]
