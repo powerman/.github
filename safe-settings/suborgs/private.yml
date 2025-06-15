@@ -13,3 +13,8 @@ repository:
   security_and_analysis:
     advanced_security:
       status: disabled
+    secret_scanning_ai_detection:
+      status: disabled
+
+  has_projects: true
+
