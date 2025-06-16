@@ -21,3 +21,4 @@ restrictedRepos:
     - ^infra$
     - ^workflows$
     - ^md-tasks-notify$
+    - ^config.nvim$

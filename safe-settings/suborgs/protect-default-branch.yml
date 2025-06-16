@@ -7,6 +7,7 @@
 suborgrepos:
   - ^workflows$
   - ^md-tasks-notify$
+  - ^config.nvim$
 
 # Every other property is the same as the org level settings and can be overridden here.
 
