@@ -12,10 +12,12 @@ repository:
   # private: true
 
   security_and_analysis:
-    # advanced_security:
-    #   status: enabled
+    #-- These are not available on GitHub Free account.
+    advanced_security:
+      status: null
     code_security:
-      status: enabled
+      status: null
+    #-- These are not available on GitHub Free account for private repos.
     secret_scanning:
       status: enabled
     secret_scanning_push_protection:
