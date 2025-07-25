@@ -22,3 +22,4 @@ restrictedRepos:
     - ^workflows$
     - ^md-tasks-notify$
     - ^config.nvim$
+    - ^kwin-last-used-desktops$
