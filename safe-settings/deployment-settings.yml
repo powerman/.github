@@ -23,3 +23,4 @@ restrictedRepos:
     - ^md-tasks-notify$
     - ^config.nvim$
     - ^kwin-last-used-desktops$
+    - ^ruscmd.nvim$
