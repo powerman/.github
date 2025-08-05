@@ -19,6 +19,7 @@ restrictedRepos:
     # For now let's include every repo one-by-one,
     # to avoid possible unwanted surprises after applying org-wide settings to ALL my repos.
     - ^infra$
+    - ^dockerize$
     - ^workflows$
     - ^md-tasks-notify$
     - ^config.nvim$
