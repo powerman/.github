@@ -27,3 +27,4 @@ restrictedRepos:
     - ^ruscmd.nvim$
     - ^goldmark-obsidian$
     - ^check$
+    - ^slogx$
