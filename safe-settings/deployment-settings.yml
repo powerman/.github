@@ -26,3 +26,4 @@ restrictedRepos:
     - ^kwin-last-used-desktops$
     - ^ruscmd.nvim$
     - ^goldmark-obsidian$
+    - ^check$
