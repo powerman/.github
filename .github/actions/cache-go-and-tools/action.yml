@@ -18,9 +18,14 @@ runs:
       with:
         path: |
           ~/go/pkg/mod
+          ~\go\pkg\mod
           ~/.cache/go-build
+          ~/Library/Caches/go-build
+          ~\AppData\Local\go-build
           ~/.cache/golangci-lint
-        key: v1-go-and-tools-${{ runner.os }}-${{ inputs.key }}-${{ hashFiles('**/go.sum') }}
+          ~/Library/Caches/golangci-lint
+          ~\AppData\Local\golangci-lint
+        key: v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-${{ hashFiles('**/go.sum') }}
         restore-keys: |
-          v1-go-and-tools-${{ runner.os }}-${{ inputs.key }}-
-          v1-go-and-tools-${{ runner.os }}-
+          v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-
+          v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-
