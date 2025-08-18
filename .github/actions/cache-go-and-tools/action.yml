@@ -28,4 +28,3 @@ runs:
         key: v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-
-          v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-
