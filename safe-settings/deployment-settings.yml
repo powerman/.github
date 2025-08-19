@@ -30,3 +30,4 @@ restrictedRepos:
     - ^check$
     - ^slogx$
     - ^gh-make-labels$
+    - ^tail$
