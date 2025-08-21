@@ -25,6 +25,6 @@ runs:
           ~/.cache/golangci-lint
           ~/Library/Caches/golangci-lint
           ~\AppData\Local\golangci-lint
-        key: v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-${{ hashFiles('**/go.sum') }}
+        key: v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-${{ hashFiles('**/go.sum', '**/go.mod') }}
         restore-keys: |
           v1-go-and-tools-${{ runner.os }}-${{ runner.arch }}-${{ inputs.key }}-
