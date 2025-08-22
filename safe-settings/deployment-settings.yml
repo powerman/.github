@@ -31,3 +31,4 @@ restrictedRepos:
     - ^slogx$
     - ^gh-make-labels$
     - ^tail$
+    - ^winfilepath$
