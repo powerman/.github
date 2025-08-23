@@ -32,3 +32,4 @@ restrictedRepos:
     - ^gh-make-labels$
     - ^tail$
     - ^winfilepath$
+    - ^fileuri$
