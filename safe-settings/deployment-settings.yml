@@ -16,6 +16,7 @@ restrictedRepos:
     - ^go-service-narada-example$
     - ^gotestcover$
     - ^narada-go$
+    - ^structlog-usage-example$
   include:
     # For now let's include every repo one-by-one,
     # to avoid possible unwanted surprises after applying org-wide settings to ALL my repos.
