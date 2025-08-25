@@ -34,3 +34,5 @@ restrictedRepos:
     - ^tail$
     - ^winfilepath$
     - ^fileuri$
+    - ^conv$
+    - ^appcfg$
