@@ -19,6 +19,7 @@ suborgrepos:
   - ^fileuri$
   - ^conv$
   - ^appcfg$
+  - ^testcert$
 
 # Every other property is the same as the org level settings and can be overridden here.
 

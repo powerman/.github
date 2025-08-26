@@ -36,3 +36,4 @@ restrictedRepos:
     - ^fileuri$
     - ^conv$
     - ^appcfg$
+    - ^testcert$
