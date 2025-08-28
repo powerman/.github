@@ -37,3 +37,4 @@ restrictedRepos:
     - ^conv$
     - ^appcfg$
     - ^testcert$
+    - ^structlog$
