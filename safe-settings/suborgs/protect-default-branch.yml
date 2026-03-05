@@ -22,6 +22,7 @@ suborgrepos:
   - ^testcert$
   - ^structlog$
   - ^sound-notifier.nvim$
+  - ^copilot-prompt.nvim$
 
 # Every other property is the same as the org level settings and can be overridden here.
 

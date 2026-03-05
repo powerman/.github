@@ -39,3 +39,4 @@ restrictedRepos:
     - ^testcert$
     - ^structlog$
     - ^sound-notifier.nvim$
+    - ^copilot-prompt.nvim$
