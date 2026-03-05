@@ -38,3 +38,4 @@ restrictedRepos:
     - ^appcfg$
     - ^testcert$
     - ^structlog$
+    - ^sound-notifier.nvim$
