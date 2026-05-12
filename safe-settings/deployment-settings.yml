@@ -40,3 +40,4 @@ restrictedRepos:
     - ^structlog$
     - ^sound-notifier.nvim$
     - ^copilot-prompt.nvim$
+    - ^filterway$
