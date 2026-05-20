@@ -31,7 +31,7 @@ jobs:
           repository: github/safe-settings
           ref: ${{ env.SAFE_SETTINGS_VERSION }}
           path: ${{ env.SAFE_SETTINGS_CODE_DIR }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
       - run: npm install
         working-directory: ${{ env.SAFE_SETTINGS_CODE_DIR }}
       - run: npm run full-sync
