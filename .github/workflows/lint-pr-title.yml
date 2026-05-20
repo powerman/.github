@@ -31,7 +31,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         if: ${{ needs.lint-pr-title.outputs.error_message != null }}
         with:
           header: pr-title-lint-error
@@ -47,7 +47,7 @@ jobs:
             ```
 
       # Delete a previous comment when the issue has been resolved.
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         if: ${{ needs.lint-pr-title.outputs.error_message == null }}
         with:
           header: pr-title-lint-error
