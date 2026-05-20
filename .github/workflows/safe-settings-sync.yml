@@ -23,10 +23,10 @@ jobs:
       SAFE_SETTINGS_CODE_DIR: ${{ github.workspace }}/.safe-settings-code
     steps:
       # Self-checkout of 'admin' repo for access to safe-settings config:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # Checkout of safe-settings repo for running full sync:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: github/safe-settings
           ref: ${{ env.SAFE_SETTINGS_VERSION }}
