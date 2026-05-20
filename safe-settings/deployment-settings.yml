@@ -40,4 +40,5 @@ restrictedRepos:
     - ^structlog$
     - ^sound-notifier.nvim$
     - ^copilot-prompt.nvim$
-    - ^filterway$
+    - ^wlproxy$
+    - ^ebpf-same-cgroup-mark$
