@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "commitMessagePrefix": "feat: ",
+  "schedule": [
+    "before 6am every day"
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": [
+        "safe-settings"
+      ],
+      "groupName": null
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update github/safe-settings version used in safe-settings-sync workflow",
+      "fileMatch": [
+        "\\.github/workflows/safe-settings-sync\\.yml$"
+      ],
+      "matchStrings": [
+        "SAFE_SETTINGS_VERSION:\\s?[\"']?(?<currentValue>[\\w.\\-]+)[\"']?"
+      ],
+      "depNameTemplate": "safe-settings",
+      "packageNameTemplate": "github/safe-settings",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
+    }
+  ]
+}
