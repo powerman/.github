@@ -42,3 +42,4 @@ restrictedRepos:
     - ^copilot-prompt.nvim$
     - ^wlproxy$
     - ^ebpf-same-cgroup-mark$
+    - ^sandbox-ai-dev$
