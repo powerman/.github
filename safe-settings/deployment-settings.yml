@@ -44,3 +44,5 @@ restrictedRepos:
     - ^ebpf-same-cgroup-mark$
     - ^sandbox-ai-dev$
     - ^pqx$
+    - ^go-monolith-example$
+    - ^go-service-example$
