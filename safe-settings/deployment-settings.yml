@@ -43,3 +43,4 @@ restrictedRepos:
     - ^wlproxy$
     - ^ebpf-same-cgroup-mark$
     - ^sandbox-ai-dev$
+    - ^pqx$
