@@ -46,3 +46,4 @@ restrictedRepos:
     - ^pqx$
     - ^go-monolith-example$
     - ^go-service-example$
+    - ^getenv$
