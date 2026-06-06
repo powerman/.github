@@ -48,3 +48,4 @@ restrictedRepos:
     - ^go-service-example$
     - ^getenv$
     - ^syncx$
+    - ^contextx$
