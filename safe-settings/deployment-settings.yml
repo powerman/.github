@@ -47,3 +47,4 @@ restrictedRepos:
     - ^go-monolith-example$
     - ^go-service-example$
     - ^getenv$
+    - ^syncx$
