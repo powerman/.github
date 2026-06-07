@@ -50,3 +50,4 @@ restrictedRepos:
     - ^syncx$
     - ^contextx$
     - ^promx$
+    - ^reflectx$
