@@ -51,3 +51,4 @@ restrictedRepos:
     - ^contextx$
     - ^promx$
     - ^reflectx$
+    - ^narada4d$
