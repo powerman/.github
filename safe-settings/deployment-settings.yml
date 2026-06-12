@@ -52,3 +52,4 @@ restrictedRepos:
     - ^promx$
     - ^reflectx$
     - ^narada4d$
+    - ^health$
