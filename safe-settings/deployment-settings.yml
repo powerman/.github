@@ -54,3 +54,4 @@ restrictedRepos:
     - ^narada4d$
     - ^health$
     - ^lint-sensitive$
+    - ^sensitive$
