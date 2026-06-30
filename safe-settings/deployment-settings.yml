@@ -53,3 +53,4 @@ restrictedRepos:
     - ^reflectx$
     - ^narada4d$
     - ^health$
+    - ^lint-sensitive$
