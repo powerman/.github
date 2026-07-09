@@ -38,6 +38,8 @@ suborgrepos:
   - ^health$
   - ^lint-sensitive$
   - ^sensitive$
+  - ^checkproto$
+  - ^checkgrpc$
 
 # Every other property is the same as the org level settings and can be overridden here.
 
