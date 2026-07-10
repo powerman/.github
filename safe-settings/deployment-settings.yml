@@ -57,3 +57,4 @@ restrictedRepos:
     - ^sensitive$
     - ^checkproto$
     - ^checkgrpc$
+    - ^deepequal$
