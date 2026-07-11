@@ -58,3 +58,4 @@ restrictedRepos:
     - ^checkproto$
     - ^checkgrpc$
     - ^deepequal$
+    - ^sqlxx$
