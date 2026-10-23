@@ -41,8 +41,11 @@ defaults:
   # Default permissions of GITHUB_TOKEN in workflows.
   # https://docs.github.com/en/rest/actions/permissions?apiVersion=2022-11-28#set-default-workflow-permissions-for-a-repository
   actions_workflow_permissions:
-    default_workflow_permissions: write
-    can_approve_pull_request_reviews: true
+    # Workflows must declare required permissions explicitly.
+    default_workflow_permissions: read
+    # Release PRs are created using RELEASE_TOKEN, because PRs created using GITHUB_TOKEN
+    # do not trigger workflows, so required status checks would never run.
+    can_approve_pull_request_reviews: false
 
   # Secrets are created (true) or removed (false), values of existing secrets are never changed.
   actions_secrets:
@@ -66,7 +69,6 @@ profiles:
 
   # Repos without release workflow.
   no-release:
-    actions_workflow_permissions: null
     actions_secrets:
       RELEASE_TOKEN: null
 
