@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Settings are applied locally (`./gh-settings/sync --apply REPO`) before committing
       # config changes, so CI needs only read access and never applies anything.
