@@ -1,0 +1,151 @@
+# Desired settings for repositories, applied by ./sync.
+#
+# Settings for each repo are built by deep-merging `defaults` with repo profiles (in listed order).
+# Objects are merged, any other values (including arrays) are replaced.
+# Null value means "do not manage this setting", so a profile may exclude a setting from defaults.
+# Settings which are not mentioned here are never changed.
+
+owner: powerman
+
+defaults:
+  # Fields are sent as is.
+  # https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#update-a-repository
+  repository:
+    security_and_analysis:
+      # Not managed: secret_scanning_ai_detection and secret_scanning_non_provider_patterns
+      # require GitHub Secret Protection, which is unavailable for personal accounts.
+      # API silently ignores attempts to enable them, so they would never be in sync.
+      secret_scanning:
+        status: enabled
+      secret_scanning_push_protection:
+        status: enabled
+
+    has_issues: true
+    has_projects: false
+    has_wiki: false
+    has_discussions: true
+
+    allow_squash_merge: true
+    allow_merge_commit: false
+    allow_rebase_merge: false
+    delete_branch_on_merge: true
+
+    squash_merge_commit_title: PR_TITLE
+    squash_merge_commit_message: PR_BODY
+
+  # Dependabot alerts.
+  vulnerability_alerts: true
+  # Dependabot security updates.
+  automated_security_fixes: true
+
+  # Rulesets are identified by name (map key).
+  # Rules are given as a map by rule type instead of array to make it possible to override them.
+  # Ruleset is replaced as a whole on update,
+  # so rule parameters which are not mentioned here will be reset to defaults.
+  # Rulesets which are not mentioned here are never changed or removed.
+  # https://docs.github.com/en/rest/repos/rules?apiVersion=2022-11-28#update-a-repository-ruleset
+  rulesets: {}
+
+profiles:
+  # Private repos on GitHub Free account does not support secret scanning,
+  # branch protection and rulesets.
+  private:
+    repository:
+      security_and_analysis: null
+
+  protected:
+    rulesets:
+      Default branch:
+        target: branch
+        enforcement: active
+        bypass_actors:
+          - actor_id: 5 # Repository admin.
+            actor_type: RepositoryRole
+            bypass_mode: always
+        conditions:
+          ref_name:
+            include: ["~DEFAULT_BRANCH"]
+            exclude: []
+        rules:
+          deletion: {}
+          non_fast_forward: {}
+          pull_request:
+            parameters:
+              allowed_merge_methods: [squash]
+              dismiss_stale_reviews_on_push: false
+              require_code_owner_review: false
+              require_last_push_approval: false
+              required_approving_review_count: 0
+              required_review_thread_resolution: false
+              require_extra_approval_for_unattributed_changes: true
+          required_status_checks:
+            parameters:
+              strict_required_status_checks_policy: false
+              # Integration 15368 is GitHub Actions.
+              required_status_checks:
+                - context: "main / dependency-review"
+                  integration_id: 15368
+                - context: "main / lint-pr-title"
+                  integration_id: 15368
+                - context: "test"
+                  integration_id: 15368
+
+  # Must be used after `protected`.
+  strict:
+    rulesets:
+      Default branch:
+        rules:
+          pull_request:
+            parameters:
+              dismiss_stale_reviews_on_push: true
+              require_code_owner_review: true
+              require_last_push_approval: true
+              required_approving_review_count: 1
+
+# Repos are added one-by-one,
+# to avoid possible unwanted surprises after applying settings to ALL my repos.
+# Archived repos are skipped: GitHub API does not allow to change their settings.
+repos:
+  myservers: [private]
+  dockerize: [protected, strict]
+  workflows: [protected]
+  md-tasks-notify: [protected]
+  config.nvim: [protected]
+  kwin-last-used-desktops: [protected]
+  ruscmd.nvim: [protected]
+  goldmark-obsidian: [protected]
+  check: [protected]
+  slogx: [protected]
+  gh-make-labels: [protected]
+  tail: [protected]
+  winfilepath: [protected]
+  fileuri: [protected]
+  conv: [protected]
+  appcfg: [protected]
+  testcert: [protected]
+  structlog: [protected]
+  sound-notifier.nvim: [protected]
+  copilot-prompt.nvim: [protected]
+  wlproxy: [protected]
+  ebpf-same-cgroup-mark: [protected]
+  sandbox-ai-dev: [protected]
+  pqx: [protected]
+  go-monolith-example: [protected]
+  go-service-example: [protected]
+  getenv: [protected]
+  syncx: [protected]
+  contextx: [protected]
+  promx: [protected]
+  reflectx: [protected]
+  narada4d: [protected]
+  health: [protected]
+  lint-sensitive: [protected]
+  sensitive: [protected]
+  checkproto: [protected]
+  checkgrpc: [protected]
+  deepequal: [protected]
+  sqlxx: [protected]
+  gotest: [protected]
+  mysqlx: [protected]
+  must: [protected]
+  chanq: [protected]

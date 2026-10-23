@@ -1,0 +1,189 @@
+#!/bin/bash
+# Apply repository settings from settings.yml using GitHub REST API.
+#
+# Usage: sync [--apply] [REPO...]
+#
+# Without --apply only shows differences between current and desired settings
+# and exits with status 2 if there are any.
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+apply=
+if [[ ${1:-} == --apply ]]; then
+    apply=1
+    shift
+fi
+
+# shellcheck disable=SC2016 # It's jq code, not shell.
+JQ_LIB='
+# Returns $cur limited to keys present in the input (recursively),
+# so it can be compared with the input ignoring extra fields returned by API.
+def shape($cur):
+    if type == "object" and ($cur | type) == "object" then
+        with_entries(.key as $k | .value |= shape($cur[$k]))
+    elif type == "array" and ($cur | type) == "array" and length == ($cur | length) then
+        [range(length) as $i | .[$i] | shape($cur[$i])]
+    else
+        $cur
+    end;
+
+def drop_nulls:
+    walk(if type == "object" then with_entries(select(.value != null)) else . end);
+'
+
+# REST API returns null for these fields unless token has write access to the repo,
+# but GraphQL API returns them with read-only access.
+# Aliases use REST field names to make it possible to merge results.
+# shellcheck disable=SC2016 # It's GraphQL code, not shell.
+GQL_REPOSITORY='
+query($owner: String!, $repo: String!) {
+    repository(owner: $owner, name: $repo) {
+        allow_auto_merge: autoMergeAllowed
+        allow_merge_commit: mergeCommitAllowed
+        allow_rebase_merge: rebaseMergeAllowed
+        allow_squash_merge: squashMergeAllowed
+        delete_branch_on_merge: deleteBranchOnMerge
+        merge_commit_message: mergeCommitMessage
+        merge_commit_title: mergeCommitTitle
+        squash_merge_commit_message: squashMergeCommitMessage
+        squash_merge_commit_title: squashMergeCommitTitle
+    }
+}
+'
+
+config=$(yq -o=json . settings.yml)
+owner=$(jq -r .owner <<<"$config")
+
+if (($#)); then
+    repos=("$@")
+else
+    mapfile -t repos < <(jq -r '.repos | keys_unsorted[]' <<<"$config")
+fi
+
+# Prints diff and returns 1 if current value differs from desired one.
+in_sync() {
+    local name=$1 cur=$2 want=$3
+    cur=$(jq -S --argjson cur "$cur" "$JQ_LIB"'shape($cur)' <<<"$want")
+    want=$(jq -S . <<<"$want")
+    if [[ $cur == "$want" ]]; then
+        return 0
+    fi
+    diff -u --label "$repo: $name (current)" --label "$repo: $name (desired)" \
+        <(echo "$cur") <(echo "$want") || true
+    return 1
+}
+
+get_vulnerability_alerts() {
+    local err
+    if err=$(gh api "repos/$owner/$repo/vulnerability-alerts" 2>&1 >/dev/null); then
+        echo true
+    elif [[ $err == *"(HTTP 404)"* ]]; then
+        echo false
+    else
+        echo "$err" >&2
+        return 1
+    fi
+}
+
+# Sets or removes setting by sending PUT or DELETE request without body.
+toggle() {
+    local endpoint=$1 enable=$2
+    if [[ $enable == true ]]; then
+        gh api --silent -X PUT "repos/$owner/$repo/$endpoint"
+    else
+        gh api --silent -X DELETE "repos/$owner/$repo/$endpoint"
+    fi
+}
+
+changed=0
+for repo in "${repos[@]}"; do
+    want=$(jq --arg repo "$repo" "$JQ_LIB"'
+        . as $config
+        | (.repos[$repo] // error("repo is not configured: \($repo)"))
+        | map($config.profiles[.] // error("unknown profile: \(.)"))
+        | reduce .[] as $p ($config.defaults; . * $p)
+        | drop_nulls
+    ' <<<"$config")
+    ok=1
+
+    cur=$(gh api "repos/$owner/$repo")
+    if [[ $(jq .archived <<<"$cur") == true ]]; then
+        echo "$repo: skipped (archived)"
+        continue
+    fi
+
+    w=$(jq -c .repository <<<"$want")
+    if [[ $w != null ]]; then
+        c=$(gh api graphql -f query="$GQL_REPOSITORY" -f owner="$owner" -f repo="$repo" \
+            --jq .data.repository | jq --argjson cur "$cur" '$cur + .')
+        if ! in_sync repository "$c" "$w"; then
+            ok=
+            if [[ $apply ]]; then
+                gh api --silent -X PATCH "repos/$owner/$repo" --input - <<<"$w"
+            fi
+        fi
+    fi
+
+    w=$(jq -c .vulnerability_alerts <<<"$want")
+    if [[ $w != null ]]; then
+        c=$(get_vulnerability_alerts)
+        if ! in_sync vulnerability_alerts "$c" "$w"; then
+            ok=
+            if [[ $apply ]]; then
+                toggle vulnerability-alerts "$w"
+            fi
+        fi
+    fi
+
+    w=$(jq -c .automated_security_fixes <<<"$want")
+    if [[ $w != null ]]; then
+        c=$(gh api "repos/$owner/$repo/automated-security-fixes" --jq .enabled)
+        if ! in_sync automated_security_fixes "$c" "$w"; then
+            ok=
+            if [[ $apply ]]; then
+                toggle automated-security-fixes "$w"
+            fi
+        fi
+    fi
+
+    w=$(jq -c '.rulesets // {}' <<<"$want")
+    if [[ $w != '{}' ]]; then
+        rulesets=$(gh api --paginate "repos/$owner/$repo/rulesets?includes_parents=false" --jq '.[]')
+        while IFS= read -r name; do
+            ruleset=$(jq -c --arg name "$name" '.[$name]' <<<"$w")
+            id=$(jq -r --arg name "$name" 'select(.name == $name) | .id' <<<"$rulesets")
+            c=null
+            if [[ $id ]]; then
+                c=$(gh api "repos/$owner/$repo/rulesets/$id" |
+                    jq '.rules |= (map({key: .type, value: del(.type)}) | from_entries)')
+            fi
+            if in_sync "ruleset \"$name\"" "$c" "$ruleset"; then
+                continue
+            fi
+            ok=
+            if [[ $apply ]]; then
+                body=$(jq --arg name "$name" \
+                    '.name = $name | .rules |= (to_entries | map({type: .key} + .value))' \
+                    <<<"$ruleset")
+                if [[ $id ]]; then
+                    gh api --silent -X PUT "repos/$owner/$repo/rulesets/$id" --input - <<<"$body"
+                else
+                    gh api --silent -X POST "repos/$owner/$repo/rulesets" --input - <<<"$body"
+                fi
+            fi
+        done < <(jq -r 'keys_unsorted[]' <<<"$w")
+    fi
+
+    if [[ $ok ]]; then
+        echo "$repo: ok"
+    elif [[ $apply ]]; then
+        echo "$repo: updated"
+    else
+        changed=1
+    fi
+done
+
+if ((changed)); then
+    exit 2
+fi

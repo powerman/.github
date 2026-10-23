@@ -1,0 +1,30 @@
+name: GH Settings Check
+on:
+  workflow_dispatch: {}
+  # Detects drift caused by manual changes in GitHub UI.
+  schedule:
+    - cron: "17 3 * * *"
+  push:
+    branches: [main]
+    paths:
+      - 'gh-settings/**'
+
+concurrency:
+  cancel-in-progress: false
+  group: gh-settings
+
+permissions:
+  contents: read
+
+jobs:
+  ghSettingsCheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      # Settings are applied locally (`./gh-settings/sync --apply REPO`) before committing
+      # config changes, so CI needs only read access and never applies anything.
+      - run: ./gh-settings/sync
+        env:
+          GH_TOKEN: ${{ secrets.GH_SETTINGS_TOKEN }}
