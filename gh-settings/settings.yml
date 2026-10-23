@@ -38,6 +38,17 @@ defaults:
   # Dependabot security updates.
   automated_security_fixes: true
 
+  # Default permissions of GITHUB_TOKEN in workflows.
+  # https://docs.github.com/en/rest/actions/permissions?apiVersion=2022-11-28#set-default-workflow-permissions-for-a-repository
+  actions_workflow_permissions:
+    default_workflow_permissions: write
+    can_approve_pull_request_reviews: true
+
+  # Secrets are created (true) or removed (false), values of existing secrets are never changed.
+  actions_secrets:
+    # Fine-grained PAT with Read-Write access to Contents and Pull requests.
+    RELEASE_TOKEN: true
+
   # Rulesets are identified by name (map key).
   # Rules are given as a map by rule type instead of array to make it possible to override them.
   # Ruleset is replaced as a whole on update,
@@ -52,6 +63,12 @@ profiles:
   private:
     repository:
       security_and_analysis: null
+
+  # Repos without release workflow.
+  no-release:
+    actions_workflow_permissions: null
+    actions_secrets:
+      RELEASE_TOKEN: null
 
   protected:
     rulesets:
@@ -106,11 +123,11 @@ profiles:
 # to avoid possible unwanted surprises after applying settings to ALL my repos.
 # Archived repos are skipped: GitHub API does not allow to change their settings.
 repos:
-  myservers: [private]
+  myservers: [private, no-release]
   dockerize: [protected, strict]
   workflows: [protected]
   md-tasks-notify: [protected]
-  config.nvim: [protected]
+  config.nvim: [protected, no-release]
   kwin-last-used-desktops: [protected]
   ruscmd.nvim: [protected]
   goldmark-obsidian: [protected]

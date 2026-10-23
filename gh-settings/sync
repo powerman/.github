@@ -5,6 +5,9 @@
 #
 # Without --apply only shows differences between current and desired settings
 # and exits with status 2 if there are any.
+#
+# With --apply value for missing secret NAME is taken from env var GH_SETTINGS_ACTION_SECRET_NAME
+# or prompted for if stdin is a terminal, and then reused for all repos.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -74,14 +77,35 @@ in_sync() {
     return 1
 }
 
-get_vulnerability_alerts() {
-    local err
-    if err=$(gh api "repos/$owner/$repo/vulnerability-alerts" 2>&1 >/dev/null); then
+# Prints true if endpoint exists or false if it returns 404.
+exists() {
+    local endpoint=$1 err
+    if err=$(gh api "repos/$owner/$repo/$endpoint" 2>&1 >/dev/null); then
         echo true
     elif [[ $err == *"(HTTP 404)"* ]]; then
         echo false
     else
         echo "$err" >&2
+        return 1
+    fi
+}
+
+declare -A action_secret_values
+
+# Sets action_secret_values[NAME] unless it is already set.
+read_action_secret() {
+    local name=$1 env=GH_SETTINGS_ACTION_SECRET_$1
+    if [[ -v action_secret_values[$name] ]]; then
+        return
+    fi
+    if [[ ${!env:-} ]]; then
+        action_secret_values[$name]=${!env}
+    elif [[ -t 0 ]]; then
+        read -rsp "Value for secret $name: " "action_secret_values[$name]" || true
+        echo >&2
+    fi
+    if [[ -z ${action_secret_values[$name]:-} ]]; then
+        echo "no value for secret $name: set $env or run in a terminal" >&2
         return 1
     fi
 }
@@ -127,7 +151,7 @@ for repo in "${repos[@]}"; do
 
     w=$(jq -c .vulnerability_alerts <<<"$want")
     if [[ $w != null ]]; then
-        c=$(get_vulnerability_alerts)
+        c=$(exists vulnerability-alerts)
         if ! in_sync vulnerability_alerts "$c" "$w"; then
             ok=
             if [[ $apply ]]; then
@@ -146,6 +170,38 @@ for repo in "${repos[@]}"; do
             fi
         fi
     fi
+
+    w=$(jq -c .actions_workflow_permissions <<<"$want")
+    if [[ $w != null ]]; then
+        c=$(gh api "repos/$owner/$repo/actions/permissions/workflow")
+        if ! in_sync actions_workflow_permissions "$c" "$w"; then
+            ok=
+            if [[ $apply ]]; then
+                gh api --silent -X PUT "repos/$owner/$repo/actions/permissions/workflow" \
+                    --input - <<<"$w"
+            fi
+        fi
+    fi
+
+    w=$(jq -c '.actions_secrets // {}' <<<"$want")
+    # Uses fd 3 because read_secret may prompt on stdin.
+    while IFS= read -r -u 3 name; do
+        w_exists=$(jq --arg name "$name" '.[$name]' <<<"$w")
+        c=$(exists "actions/secrets/$name")
+        if in_sync "secret $name" "$c" "$w_exists"; then
+            continue
+        fi
+        ok=
+        if [[ $apply ]]; then
+            if [[ $w_exists == true ]]; then
+                read_action_secret "$name"
+                printf %s "${action_secret_values[$name]}" |
+                    gh secret set "$name" --repo "$owner/$repo" >/dev/null
+            else
+                gh secret delete "$name" --repo "$owner/$repo" >/dev/null
+            fi
+        fi
+    done 3< <(jq -r 'keys_unsorted[]' <<<"$w")
 
     w=$(jq -c '.rulesets // {}' <<<"$want")
     if [[ $w != '{}' ]]; then
