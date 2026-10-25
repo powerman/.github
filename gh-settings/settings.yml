@@ -168,3 +168,4 @@ repos:
   mysqlx: [protected]
   must: [protected]
   chanq: [protected]
+  jinja.nvim: [protected]
