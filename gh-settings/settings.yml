@@ -169,3 +169,4 @@ repos:
   must: [protected]
   chanq: [protected]
   jinja.nvim: [protected]
+  mockery-templates: [protected]
