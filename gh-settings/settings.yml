@@ -127,6 +127,7 @@ profiles:
 repos:
   myservers: [private, no-release]
   dockerize: [protected, strict]
+  golangci-lint-strict: [no-release]
   workflows: [protected]
   md-tasks-notify: [protected]
   config.nvim: [protected, no-release]
