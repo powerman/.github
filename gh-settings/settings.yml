@@ -171,3 +171,4 @@ repos:
   chanq: [protected]
   jinja.nvim: [protected]
   mockery-templates: [protected]
+  kongusage: [protected]
