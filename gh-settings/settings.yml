@@ -172,3 +172,4 @@ repos:
   jinja.nvim: [protected]
   mockery-templates: [protected]
   kongusage: [protected]
+  rpc-codec: [protected]
