@@ -173,3 +173,4 @@ repos:
   mockery-templates: [protected]
   kongusage: [protected]
   rpc-codec: [protected]
+  go-scripts-example: [protected]
