@@ -28,6 +28,7 @@ defaults:
     allow_squash_merge: true
     allow_merge_commit: false
     allow_rebase_merge: false
+    allow_auto_merge: true
     delete_branch_on_merge: true
 
     squash_merge_commit_title: PR_TITLE
@@ -37,6 +38,10 @@ defaults:
   vulnerability_alerts: true
   # Dependabot security updates.
   automated_security_fixes: true
+
+  # Published releases can't change their tag and assets,
+  # so release workflows must upload assets while release is a draft.
+  immutable_releases: true
 
   # Default permissions of GITHUB_TOKEN in workflows.
   # https://docs.github.com/en/rest/actions/permissions?apiVersion=2022-11-28#set-default-workflow-permissions-for-a-repository

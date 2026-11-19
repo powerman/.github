@@ -171,6 +171,17 @@ sync_repo() {
         fi
     fi
 
+    w=$(jq -c .immutable_releases <<<"$want")
+    if [[ $w != null ]]; then
+        c=$(gh api "repos/$owner/$repo/immutable-releases" --jq .enabled)
+        if ! in_sync immutable_releases "$c" "$w"; then
+            ok=
+            if [[ $apply ]]; then
+                toggle immutable-releases "$w"
+            fi
+        fi
+    fi
+
     w=$(jq -c .actions_workflow_permissions <<<"$want")
     if [[ $w != null ]]; then
         c=$(gh api "repos/$owner/$repo/actions/permissions/workflow")
