@@ -70,6 +70,7 @@ profiles:
   # branch protection and rulesets.
   private:
     repository:
+      allow_auto_merge: null
       security_and_analysis: null
 
   # Repos without release workflow.
